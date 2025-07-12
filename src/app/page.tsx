@@ -26,6 +26,7 @@ export default function LoginPage() {
         const role = data.role?.toLowerCase();
         const token = data.token;
         localStorage.setItem("token", token);
+        localStorage.setItem("role", role);
 
         if (role === "superadmin") router.push("/superadmin");
         else if (role === "member") router.push("/member");

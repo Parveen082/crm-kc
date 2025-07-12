@@ -7,13 +7,6 @@ import { BarChart, CreditCard, Users, LineChart } from "lucide-react";
 export default function DashboardPage() {
   const router = useRouter();
 
-  useEffect(() => {
-    const isLoggedIn = Cookies.get("admin_login");
-    if (!isLoggedIn) {
-      router.push("/Admin-panel-login");
-    }
-  }, [router]);
-
   const stats = [
     {
       label: "Total Users",
@@ -38,7 +31,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className=" bg-gray-100 p-6">
       <h1 className="text-4xl font-bold text-gray-800 mb-10 text-center">
         Admin Dashboard
       </h1>
