@@ -1,6 +1,6 @@
 export default function MemberPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-green-50">
+    <main className="flex flex-col items-center justify-center bg-green-50">
       <h1 className="text-3xl font-bold text-green-800">Member Dashboard</h1>
       <p className="mt-4 text-lg text-green-700">Welcome, Member! Here you can view and manage your assigned tasks.</p>
     </main>

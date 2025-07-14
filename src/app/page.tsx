@@ -62,7 +62,6 @@ export default function LoginPage() {
             placeholder="Enter your email"
           />
         </div>
-
         <div className="space-y-2">
           <input
             type="password"

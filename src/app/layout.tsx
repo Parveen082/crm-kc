@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "CRM",
-  description: "",
+  description: "keshvacredit CRM",
 };
 
 export default function RootLayout({
