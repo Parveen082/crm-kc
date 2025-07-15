@@ -3,8 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { Toaster } from 'react-hot-toast';
-import Cookies from "js-cookie";
-import { Menu, X, LayoutDashboard, Users, Clock, LogOut, BadgeCheck,UserCog } from "lucide-react";
+import { Menu, X, LayoutDashboard, Users, Clock, LogOut, BadgeCheck, UserCog, Globe } from "lucide-react";
 
 
 export default function AdminPanelLayout({
@@ -32,6 +31,7 @@ export default function AdminPanelLayout({
     router.prefetch("/superadmin/agents");
     router.prefetch("/superadmin/lenderstatus");
     router.prefetch("/superadmin/workupdate");
+     router.prefetch("/superadmin/website-users");
   }, [router]);
 
   return (
@@ -73,8 +73,8 @@ export default function AdminPanelLayout({
                 <Link
                   href="/superadmin/dashboard"
                   className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${pathname === "/superadmin/dashboard"
-                      ? "bg-gray-700 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    ? "bg-gray-700 text-white"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
                     }`}
                 >
                   <LayoutDashboard className="w-5 h-5 mr-3" />
@@ -86,8 +86,8 @@ export default function AdminPanelLayout({
                 <Link
                   href="/superadmin/members"
                   className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${pathname === "/superadmin/member"
-                      ? "bg-gray-700 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    ? "bg-gray-700 text-white"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
                     }`}
                 >
                   <Users className="w-5 h-5 mr-3" />
@@ -98,21 +98,34 @@ export default function AdminPanelLayout({
                 <Link
                   href="/superadmin/agents"
                   className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${pathname === "/superadmin/member"
-                      ? "bg-gray-700 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    ? "bg-gray-700 text-white"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
                     }`}
                 >
                   <UserCog className="w-5 h-5 mr-3" />
                   Agent Management
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/superadmin/website-users"
+                  className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${pathname === "/superadmin/website-users"
+                      ? "bg-gray-700 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    }`}
+                >
+                  <Globe className="w-5 h-5 mr-3" />
+                  Website Users
+                </Link>
+              </li>
+
 
               <li>
                 <Link
                   href="/superadmin/lenderstatus"
                   className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${pathname === "/superadmin/lenderstatus"
-                      ? "bg-gray-700 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    ? "bg-gray-700 text-white"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
                     }`}
                 >
                   <BadgeCheck className="w-5 h-5 mr-3" />
@@ -120,12 +133,13 @@ export default function AdminPanelLayout({
                 </Link>
               </li>
 
+
               <li>
                 <Link
                   href="/superadmin/workupdate"
                   className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${pathname === "/superadmin/workupdate"
-                      ? "bg-gray-700 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    ? "bg-gray-700 text-white"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
                     }`}
                 >
                   <Clock className="w-5 h-5 mr-3" />

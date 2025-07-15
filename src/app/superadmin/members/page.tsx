@@ -38,7 +38,7 @@ export default function Page() {
 
       const result = await res.json();
       if (res.ok) {
-        toast.success('User created successfully!');
+        toast.success('Member created successfully!');
         setIsModalOpen(false);
         setFormData({ Membername: '', MemberMail: '', MemberPassword: '' });
       } else {
@@ -52,11 +52,11 @@ export default function Page() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-black mb-4">Member Management</h1>
+      <h1 className="text-xl font-bold text-black mb-4">Member Management</h1>
 
       <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        className="bg-green-600 hover:bg-green-700 text-white  py-2 px-4 rounded"
       >
         Add Member
       </button>
@@ -64,7 +64,7 @@ export default function Page() {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-semibold mb-4 text-black">Add New Member</h2>
+            <h2 className="text-sm font-semibold mb-4 text-black">Add New Member</h2>
 
             <input
               type="text"

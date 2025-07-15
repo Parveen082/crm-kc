@@ -4,36 +4,75 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function LoginPage() {
+  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const endpoints = [
+    {
+      url: "https://keshvacredit.com/api/v1/admin/login",
+      body: {
+        adminMail: email,
+        adminName: username,
+        password: password,
+      },
+    },
+    {
+      url: "https://keshvacredit.com/api/v1/member/login",
+      body: {
+        MemberMail: email,
+        Membername: username,
+        MemberPassword: password,
+      },
+    },
+    {
+      url: "https://keshvacredit.com/api/v1/agent/login",
+      body: {
+        AgentMail: email,
+        Agentname: username,
+        AgentPassword: password,
+      },
+    },
+  ];
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const res = await fetch("https://keshvacredit.com/api/v1/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ adminMail: username, password }),
-      });
+      let success = false;
 
-      const data = await res.json();
+      for (const { url, body } of endpoints) {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
 
-      if (res.ok) {
-        const role = data.role?.toLowerCase();
-        const token = data.token;
-        localStorage.setItem("token", token);
-        localStorage.setItem("role", role);
+        const data = await res.json();
 
-        if (role === "superadmin") router.push("/superadmin");
-        else if (role === "member") router.push("/member");
-        else if (role === "agent") router.push("/agent");
-        else toast.error("Unknown role: " + role);
-      } else {
-        toast.error(data.message || "Login failed");
+        if (res.ok && data.token && data.role) {
+          const role = data.role.toLowerCase();
+          const token = data.token;
+
+          localStorage.setItem("token", token);
+          localStorage.setItem("role", role);
+
+          // 🔀 Redirect based on role
+          if (role === "superadmin") router.push("/superadmin");
+          else if (role === "member") router.push("/member");
+          else if (role === "agent") router.push("/agent");
+          else toast.error("Unknown role: " + role);
+
+          success = true;
+          break;
+        }
+      }
+
+      if (!success) {
+        toast.error("Invalid credentials or unauthorized user");
       }
     } catch (err) {
       console.error(err);
@@ -44,49 +83,71 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-200 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-white flex items-center justify-center px-4">
       <Toaster position="top-right" reverseOrder={false} />
       <form
         onSubmit={handleLogin}
-        className="w-full max-w-md bg-opacity-90 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-gray-200 space-y-6"
+        className="w-[300px] bg-[#1c3360] text-white rounded-[30px] py-6 px-5 space-y-4 text-center shadow-md"
       >
-        <h1 className="text-3xl font-bold text-center text-blue-700">CRM Login</h1>
+        <h1 className="text-xl font-semibold">Login Page</h1>
+        <hr className="border-t border-white w-1/4 mx-auto" />
+        <p className="text-xs">Login to manage your Dashboard</p>
 
-        <div className="space-y-2">
-          <input
-            type="text"
-            className="w-full text-black border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            placeholder="Enter your email"
-          />
-        </div>
-        <div className="space-y-2">
-          <input
-            type="password"
-            className="text-black w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            required
-          />
-        </div>
+        <input
+          type="text"
+          className="w-full bg-white text-black text-xs px-3 py-1.5 rounded-md outline-none"
+          placeholder="Your name"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+
+        <input
+          type="email"
+          className="w-full bg-white text-black text-xs px-3 py-1.5 rounded-md outline-none"
+          placeholder="Your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+
+        <input
+          type="password"
+          className="w-full bg-white text-black text-xs px-3 py-1.5 rounded-md outline-none"
+          placeholder="Your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <p className="text-[10px] leading-4 text-gray-200">
+          Use your <span className="text-white font-medium">username, email</span> or <span className="text-white font-medium">password</span> to log in
+        </p>
+
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-2 rounded-lg font-semibold disabled:opacity-50"
           disabled={loading}
+          className="bg-red-600 hover:bg-red-700 w-1/2 py-1.5 rounded text-white text-xs font-semibold disabled:opacity-50"
         >
-          {loading ? "Logging in..." : "Login"}
+          {loading ? "Logging..." : "Submit"}
         </button>
 
-        <hr className="h-1 bg-black border-none" />
-
-        <p className="text-xs text-gray-500 text-center pt-2">
-          © {new Date().getFullYear()} KeshvaCredit. All rights reserved.
+        <hr className="border-t border-white w-1/4 mx-auto" />
+        <p className="text-[10px]">
+          Need help?{" "}
+          <a
+            href="https://wa.me/918901229195"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-300 underline hover:text-blue-200"
+          >
+            Contact support
+          </a>
         </p>
+
       </form>
     </main>
+
   );
 }

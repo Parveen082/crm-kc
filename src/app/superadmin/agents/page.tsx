@@ -53,11 +53,11 @@ export default function Page() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-black mb-4">Agent Management</h1>
+      <h1 className="text-xl font-bold text-black mb-4">Agent Management</h1>
 
       <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        className="bg-green-600 hover:bg-green-700 text-white  py-2 px-4 rounded"
       >
         Add Agent
       </button>
