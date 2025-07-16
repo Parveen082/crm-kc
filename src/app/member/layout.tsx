@@ -48,7 +48,7 @@ export default function MemberPanelLayout({
           <div className="flex items-center justify-between p-4 border-b border-gray-700">
             <Link href="/member/dashboard" className="flex items-center space-x-2">
               <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-                Member
+                Partner
               </span>
             </Link>
             <button

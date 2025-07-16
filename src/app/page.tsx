@@ -87,10 +87,11 @@ export default function LoginPage() {
       <Toaster position="top-right" reverseOrder={false} />
       <form
         onSubmit={handleLogin}
-        className="w-[300px] bg-[#1c3360] text-white rounded-[30px] py-6 px-5 space-y-4 text-center shadow-md"
+       className="w-[300px] bg-[#1c3360] text-white rounded-[30px] py-6 px-5 space-y-3 text-center drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]"
+
       >
-        <h1 className="text-xl font-semibold">Login Page</h1>
-        <hr className="border-t border-white w-1/4 mx-auto" />
+        <h1 className="text-lg font-semibold">Login Page</h1>
+        <hr className="border-t border-white w-1/2 mx-auto" />
         <p className="text-xs">Login to manage your Dashboard</p>
 
         <input
@@ -128,7 +129,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-red-600 hover:bg-red-700 w-1/2 py-1.5 rounded text-white text-xs font-semibold disabled:opacity-50"
+          className="bg-red-600 hover:bg-red-700 w-1/2 py-1.5 rounded-lg text-white text-xs font-semibold disabled:opacity-50"
         >
           {loading ? "Logging..." : "Submit"}
         </button>

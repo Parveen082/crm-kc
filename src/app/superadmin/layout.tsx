@@ -27,8 +27,8 @@ export default function AdminPanelLayout({
 
   useEffect(() => {
     router.prefetch("/superadmin/dashboard");
-    router.prefetch("/superadmin/members");
-    router.prefetch("/superadmin/agents");
+    router.prefetch("/superadmin/Members");
+    router.prefetch("/superadmin/Agents");
     router.prefetch("/superadmin/lenderstatus");
     router.prefetch("/superadmin/workupdate");
      router.prefetch("/superadmin/website-users");
@@ -84,7 +84,7 @@ export default function AdminPanelLayout({
 
               <li>
                 <Link
-                  href="/superadmin/members"
+                  href="/superadmin/Members"
                   className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${pathname === "/superadmin/member"
                     ? "bg-gray-700 text-white"
                     : "text-gray-300 hover:bg-gray-700 hover:text-white"
@@ -96,7 +96,7 @@ export default function AdminPanelLayout({
               </li>
               <li>
                 <Link
-                  href="/superadmin/agents"
+                  href="/superadmin/Agents"
                   className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${pathname === "/superadmin/member"
                     ? "bg-gray-700 text-white"
                     : "text-gray-300 hover:bg-gray-700 hover:text-white"
@@ -182,7 +182,7 @@ export default function AdminPanelLayout({
 
         {/* Scrollable Content Area */}
         <main className="flex-1 overflow-y-auto mt-16 p-4 md:p-6 bg-gray-50">
-          <div className="max-w-7xl mx-auto">
+          <div className=" mx-auto">
             <div className="bg-white rounded-lg shadow p-4 md:p-6">
               <Toaster position="top-right" />
               {children}
