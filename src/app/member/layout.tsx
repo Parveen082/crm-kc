@@ -123,9 +123,9 @@ export default function MemberPanelLayout({
         </header>
 
         {/* Content Area */}
-        <main className="flex-1 overflow-y-auto mt-16 p-4 md:p-6 bg-gray-50">
+        <main className="flex-1 overflow-y-auto mt-16 p-4 md:p-6 ">
           <div className="max-w-7xl mx-auto">
-            <div className="bg-white rounded-lg shadow p-4 md:p-6">
+            <div className=" shadow p-4 md:p-6">
               <Toaster position="top-right" />
               {children}
             </div>

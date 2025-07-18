@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { Toaster } from 'react-hot-toast';
-import { Menu, X, LayoutDashboard, Users, Clock, LogOut, BadgeCheck, UserCog, Globe } from "lucide-react";
+import { Menu, X, LayoutDashboard, Users, Clock, LogOut, BadgeCheck, UserCog, Globe ,Merge} from "lucide-react";
 
 
 export default function AdminPanelLayout({
@@ -32,6 +32,7 @@ export default function AdminPanelLayout({
     router.prefetch("/superadmin/lenderstatus");
     router.prefetch("/superadmin/workupdate");
      router.prefetch("/superadmin/website-users");
+       router.prefetch("/superadmin/dedupe-check");
   }, [router]);
 
   return (
@@ -118,6 +119,18 @@ export default function AdminPanelLayout({
                   Website Users
                 </Link>
               </li>
+               <li>
+                <Link
+                  href="/superadmin/dedupe-check"
+                  className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${pathname === "/superadmin/dedupe-check"
+                      ? "bg-gray-700 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    }`}
+                >
+                  <Merge className="w-5 h-5 mr-3" />
+                  dedupe-check
+                </Link>
+              </li>
 
 
               <li>
@@ -181,9 +194,9 @@ export default function AdminPanelLayout({
         </header>
 
         {/* Scrollable Content Area */}
-        <main className="flex-1 overflow-y-auto mt-16 p-4 md:p-6 bg-gray-50">
+        <main className="flex-1 overflow-y-auto mt-16 p-4 md:p-6 ">
           <div className=" mx-auto">
-            <div className="bg-white rounded-lg shadow p-4 md:p-6">
+            <div className=" p-4 md:p-6">
               <Toaster position="top-right" />
               {children}
             </div>

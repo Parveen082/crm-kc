@@ -25,20 +25,9 @@ export default function Page() {
     }
   };
 
-useEffect(() => {
-  const fetchMembers = async () => {
-    try {
-      const res = await fetch("/api/members");
-      const data = await res.json();
-      setMembers(data);
-    } catch (error) {
-      console.error("Failed to fetch members", error);
-    }
-  };
-
-  fetchMembers();
-}, []);
-
+ useEffect(() => {
+    fetchMembers();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
