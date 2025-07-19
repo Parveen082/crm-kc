@@ -31,7 +31,7 @@ export default function AdminPanelLayout({
     router.prefetch("/superadmin/Agents");
     router.prefetch("/superadmin/lenderstatus");
     router.prefetch("/superadmin/workupdate");
-     router.prefetch("/superadmin/website-users");
+     router.prefetch("/superadmin/data-management");
        router.prefetch("/superadmin/dedupe-check");
   }, [router]);
 
@@ -72,8 +72,8 @@ export default function AdminPanelLayout({
             <ul className="space-y-1">
               <li>
                 <Link
-                  href="/superadmin/dashboard"
-                  className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${pathname === "/superadmin/dashboard"
+                  href="/superadmin"
+                  className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${pathname === "/superadmin"
                     ? "bg-gray-700 text-white"
                     : "text-gray-300 hover:bg-gray-700 hover:text-white"
                     }`}
@@ -109,14 +109,14 @@ export default function AdminPanelLayout({
               </li>
               <li>
                 <Link
-                  href="/superadmin/website-users"
-                  className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${pathname === "/superadmin/website-users"
+                  href="/superadmin/data-management"
+                  className={`flex items-center px-4 py-3 text-sm font-medium transition-colors ${pathname === "/superadmin/data-management"
                       ? "bg-gray-700 text-white"
                       : "text-gray-300 hover:bg-gray-700 hover:text-white"
                     }`}
                 >
                   <Globe className="w-5 h-5 mr-3" />
-                  Website Users
+                  Data managment
                 </Link>
               </li>
                <li>
