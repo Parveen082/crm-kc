@@ -268,93 +268,162 @@ export default function PartnerDashboard() {
     };
 
     return (
-        <div className="rounded-2xl flex items-center justify-center p-4">
-            <div className="w-full max-w-xl bg-white rounded-2xl shadow-xl overflow-hidden animate-fadeIn">
-                <div className="p-6 space-y-6 text-center">
-                    <p className="text-xl text-gray-600">
-                        <span className="font-semibold text-blue-600">Dedupe Check</span>.
-                    </p>
-                    <div className="bg-gradient-to-r from-white via-gray-50 to-white rounded-xl p-4 border border-dashed border-purple-300 shadow-inner text-left space-y-3 text-gray-700">
-                        <h2 className="text-lg font-bold text-purple-600">📂 Upload Excel/CSV File</h2>
-                        <input
-                            type="file"
-                            accept=".xlsx, .xls, .csv"
-                            onChange={handleFileChange}
-                            className="block w-full p-1 border rounded-md text-sm"
-                        />
-                        {processing && (
-                            <div className="space-y-2">
-                                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                                    <div
-                                        className="bg-blue-600 h-2.5 rounded-full"
-                                        style={{ width: `${progress}%` }}
-                                    />
-                                </div>
-                                <div className="text-xs text-gray-600">
-                                    <p>Processed: {processedRows} of {totalRows} rows ({progress}%)</p>
-                                    <p>Duplicates: {duplicates.length}</p>
-                                    <p>Not Duplicates: {notDuplicates.length}</p>
-                                </div>
-                            </div>
-                        )}
-                        <button
-                            onClick={handleUpload}
-                            className="px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-md shadow-md hover:bg-blue-700 transition"
-                            disabled={processing || !file}
-                        >
-                            {processing ? `Processing (${Math.round(progress)}%)` : 'Upload File'}
-                        </button>
-                        {uploadMessage && (
-                            <p
-                                className={`text-xs mt-2 text-center ${uploadMessage.startsWith('✅')
-                                    ? 'text-green-600'
-                                    : uploadMessage.startsWith('❌')
-                                        ? 'text-red-600'
-                                        : 'text-blue-600'
-                                    }`}
-                            >
-                                {uploadMessage}
-                            </p>
-                        )}
-                    </div>
+  <div className="max-w-2xl mx-auto p-4">
+  <div className=" rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-200 hover:shadow-md">
+    <div className="p-6 space-y-6">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-gray-800">
+          <span className="text-blue-600">Dedupe find</span> Tool
+        </h2>
+        <p className="text-gray-500 mt-1">Upload your file to find duplicate records</p>
+      </div>
 
-                    {!processing && totalRows > 0 && (
-                        <div className="bg-gray-100 p-3 rounded text-sm text-gray-600">
-                            <p>Total Data: {totalRows} rows</p>
-                            <p>Duplicates: {duplicates.length}</p>
-                            <p>Not Duplicates: {notDuplicates.length}</p>
-                        </div>
-                    )}
-
-                    {!processing &&
-                        phoneColumnIndex !== null &&
-                        (duplicates.length > 0 || notDuplicates.length > 0) && (
-                            <div className="flex justify-center gap-4 mt-6 flex-wrap">
-                                <div className="flex flex-col items-center p-4 bg-red-100 text-red-800 rounded-lg shadow w-60">
-                                    <h3 className="text-base font-semibold">Status: Duplicate</h3>
-                                    <p className="text-xl font-bold">{duplicates.length}</p>
-                                    <button
-                                        onClick={() => downloadCSV(duplicates, 'Duplicates')}
-                                        className="mt-2 px-3 py-1.5 bg-red-500 text-white rounded hover:bg-red-600 text-xs transition"
-                                    >
-                                        Download Duplicates
-                                    </button>
-                                </div>
-
-                                <div className="flex flex-col items-center p-4 bg-green-100 text-green-800 rounded-lg shadow w-60">
-                                    <h3 className="text-base font-semibold">Status: Not Duplicate</h3>
-                                    <p className="text-xl font-bold">{notDuplicates.length}</p>
-                                    <button
-                                        onClick={() => downloadCSV(notDuplicates, 'Not_Duplicates')}
-                                        className="mt-2 px-3 py-1.5 bg-green-500 text-white rounded hover:bg-green-600 text-xs transition"
-                                    >
-                                        Download Not Duplicates
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                </div>
-            </div>
+      {/* File Upload Card */}
+      <div className="bg-gray-50 rounded-lg p-5 border-2 border-dashed border-gray-200 transition-colors hover:border-blue-300">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="p-3 bg-blue-50 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+          </div>
+          <div className="text-center">
+            <h3 className="font-medium text-gray-700">Upload Excel/CSV File</h3>
+          </div>
+          <input
+            type="file"
+            accept=".xlsx, .xls, .csv"
+            onChange={handleFileChange}
+            className="hidden"
+            id="file-upload"
+          />
+          <label 
+            htmlFor="file-upload"
+            className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md shadow-sm hover:bg-blue-700 transition-colors cursor-pointer"
+          >
+            Choose File
+          </label>
+          {file && (
+            <p className="text-sm text-gray-600 mt-2">
+              Selected: <span className="font-medium">{file.name}</span>
+            </p>
+          )}
         </div>
+
+        {/* Progress Bar */}
+        {processing && (
+          <div className="mt-6 space-y-3">
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>Processing...</span>
+              <span>{progress}%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="bg-blue-50 p-2 rounded text-blue-700">
+                <span className="font-medium">Total:</span> {totalRows}
+              </div>
+              <div className="bg-red-50 p-2 rounded text-red-700">
+                <span className="font-medium">Duplicates:</span> {duplicates.length}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Upload Button */}
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={handleUpload}
+            className={`px-5 py-2 rounded-md font-medium text-sm flex items-center ${processing || !file ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm'}`}
+            disabled={processing || !file}
+          >
+            {processing ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Processing...
+              </>
+            ) : (
+              'Start process'
+            )}
+          </button>
+        </div>
+
+        {uploadMessage && (
+          <div className={`mt-3 text-center text-sm p-2 rounded ${uploadMessage.startsWith('✅') ? 'bg-green-50 text-green-700' : uploadMessage.startsWith('❌') ? 'bg-red-50 text-red-700' : 'bg-blue-50 text-blue-700'}`}>
+            {uploadMessage}
+          </div>
+        )}
+      </div>
+
+      {/* Results Summary */}
+      {!processing && totalRows > 0 && (
+        <div className="bg-gray-50 rounded-lg p-4">
+          <h3 className="font-medium text-gray-700 mb-2">Results Summary</h3>
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div className="bg-white p-3 rounded shadow-sm">
+              <p className="text-sm text-gray-500">Total Records</p>
+              <p className="text-xl font-bold text-gray-800">{totalRows}</p>
+            </div>
+            <div className="bg-white p-3 rounded shadow-sm">
+              <p className="text-sm text-gray-500">Duplicates</p>
+              <p className="text-xl font-bold text-red-600">{duplicates.length}</p>
+            </div>
+            <div className="bg-white p-3 rounded shadow-sm">
+              <p className="text-sm text-gray-500">Unique</p>
+              <p className="text-xl font-bold text-green-600">{notDuplicates.length}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Download Buttons */}
+      {!processing && phoneColumnIndex !== null && (duplicates.length > 0 || notDuplicates.length > 0) && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="border border-red-100 bg-red-50 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-medium text-red-700">Duplicate Records</h3>
+                <p className="text-2xl font-bold text-red-600">{duplicates.length}</p>
+              </div>
+              <button
+                onClick={() => downloadCSV(duplicates, 'Duplicates')}
+                className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 transition-colors flex items-center"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+              </button>
+            </div>
+          </div>
+
+          <div className="border border-green-100 bg-green-50 rounded-lg p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-medium text-green-700">Unique Records</h3>
+                <p className="text-2xl font-bold text-green-600">{notDuplicates.length}</p>
+              </div>
+              <button
+                onClick={() => downloadCSV(notDuplicates, 'Not_Duplicates')}
+                className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors flex items-center"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
     );
 }

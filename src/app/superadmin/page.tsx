@@ -166,7 +166,7 @@ const LoanDashboard = () => {
 
           {/* Chart 5: Portfolio Growth Line Chart */}
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 lg:col-span-2">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Portfolio Growth (2023)</h2>
+            <h2 className="text-lg font-semibold text-gray-700 mb-4">Portfolio Growth (2025)</h2>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={portfolioGrowth}>

@@ -1,21 +1,85 @@
 'use client';
 
+import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import {
-  BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
+  BarChart, Bar, PieChart, Pie, Cell,
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   Legend, ResponsiveContainer
 } from 'recharts';
 
 const LoanDashboard = () => {
-  // Sample data for the charts
-  const loanDistributionData = [
-    { name: 'Personal', value: 35 },
-    { name: 'Mortgage', value: 25 },
-    { name: 'Auto', value: 20 },
-    { name: 'Business', value: 15 },
-    { name: 'Education', value: 5 },
-  ];
+  const [userData, setUserData] = useState({
+    userCount: 0,
+    users2Count: 0,
+    totalUsers: 0,
+  });
+  const [analysisData, setAnalysisData] = useState({
+    validUsers: 0,
+    invalidUsers: 0,
+  });
 
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+  // Fetch user data from API
+  const fetchUserData = async () => {
+    if (!token) {
+      toast.error('No token found in localStorage.');
+      return;
+    }
+
+    try {
+      const res = await fetch('https://keshvacredit.com/api/v1/admin/get/all/users', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setUserData({
+          userCount: data.userCount || 0,
+          users2Count: data.users2Count || 0,
+          totalUsers: data.totalUsers || 0,
+        });
+      } else {
+        toast.error(data.message || 'Failed to fetch user data.');
+      }
+    } catch {
+      toast.error('Error fetching user data');
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+    fetchAnalysisData();
+  }, []);
+  const fetchAnalysisData = async () => {
+    if (!token) {
+      toast.error('No token found in localStorage.');
+      return;
+    }
+
+    try {
+      const res = await fetch('https://keshvacredit.com/api/v1/admin/analysis', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setAnalysisData({
+          validUsers: data.validUsers || 0,
+          invalidUsers: data.invalidUsers || 0,
+        });
+      } else {
+        toast.error(data.message || 'Failed to fetch analysis data.');
+      }
+    } catch {
+      toast.error('Error fetching analysis data');
+    }
+  };
+
+  const loanDistributionData = [
+    { name: 'Web Users...', value: userData.userCount },
+    { name: 'Old Users', value: userData.users2Count },
+  ];
+  // Sample data for other charts
   const repaymentStatusData = [
     { month: 'Jan', current: 120, delinquent: 10, defaulted: 5 },
     { month: 'Feb', current: 150, delinquent: 12, defaulted: 3 },
@@ -33,53 +97,106 @@ const LoanDashboard = () => {
     { type: 'Education', amount: 200000, count: 5 },
   ];
 
-  const customerDemographics = [
-    { age: '18-25', count: 15 },
-    { age: '26-35', count: 40 },
-    { age: '36-45', count: 30 },
-    { age: '46-55', count: 10 },
-    { age: '56+', count: 5 },
-  ];
 
   const portfolioGrowth = [
-    { quarter: 'Q1', amount: 2500000 },
-    { quarter: 'Q2', amount: 3200000 },
-    { quarter: 'Q3', amount: 3800000 },
-    { quarter: 'Q4', amount: 4500000 },
+    { quarter: 'Q1', amount: 1000, uv: 400 },
+    { quarter: 'Q2', amount: 1200, uv: 600 },
+    { quarter: 'Q3', amount: 1500, uv: 800 },
+    { quarter: 'Q4', amount: 1800, uv: 700 },
+    { quarter: 'Q1', amount: 2000, uv: 900 },
+    { quarter: 'Q2', amount: 2200, uv: 1000 },
   ];
+
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+    <div className="bg-gray-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 md:mb-8">Loan Portfolio Dashboard</h1>
-
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 md:mb-8">Dashboard</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6 md:mb-8">
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-            <h3 className="text-gray-500 text-sm font-bold">Total Loans</h3>
-            <p className="text-2xl font-bold text-blue-400">$4.5M</p>
+            <h3 className="text-gray-500 text-sm font-bold">Total Users</h3>
+            <p className="text-2xl font-bold text-blue-400">{userData.totalUsers.toLocaleString()}</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-            <h3 className="text-gray-500 text-sm font-bold">Active Customers</h3>
-            <p className="text-2xl font-bold text-pink-600">1,250</p>
+            <h3 className="text-gray-500 text-sm font-bold">Old Users</h3>
+            <p className="text-2xl font-bold text-pink-600">{(userData.users2Count - userData.userCount).toLocaleString()}</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-            <h3 className="text-gray-500 text-sm font-bold">Current Rate</h3>
-            <p className="text-2xl font-bold text-green-600">92.5%</p>
+            <h3 className="text-gray-500 text-sm font-bold">Website Users</h3>
+            <p className="text-2xl font-bold text-green-600">{userData.userCount.toLocaleString()}</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-            <h3 className="text-gray-500 text-sm font-bold">Delinquency</h3>
-            <p className="text-2xl font-bold text-amber-500">7.5%</p>
+            <h3 className="text-gray-500 text-sm font-bold">Valid Users</h3>
+            <p className="text-2xl font-bold text-amber-500">
+              {analysisData.validUsers.toLocaleString()}
+            </p>
           </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+            <h3 className="text-gray-500 text-sm font-bold">Invalid Users</h3>
+            <p className="text-2xl font-bold text-amber-500">
+              {analysisData.invalidUsers.toLocaleString()}
+            </p>
+          </div>
+        </div>
+        <div className="overflow-x-auto mt-8">
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">Lender Lead Summary</h2>
+          <table className="min-w-full table-auto border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+            <thead className="bg-gray-100 text-gray-700 text-sm font-semibold">
+              <tr>
+                <th className="px-6 py-3 text-left">Sr. No</th>
+                <th className="px-6 py-3 text-left">Lender Name</th>
+                <th className="px-6 py-3 text-left">Total Leads Sent</th>
+                <th className="px-6 py-3 text-left">Successful Leads</th>
+                <th className="px-6 py-3 text-left">Dedupe Leads</th>
+              </tr>
+            </thead>
+            <tbody className="text-sm text-gray-800 divide-y divide-gray-200">
+              {[
+                {
+                  lender: 'money view',
+                  total: 1200,
+                  success: 950,
+                  dedupe: 50,
+                },
+                {
+                  lender: 'Ramfin',
+                  total: 1100,
+                  success: 870,
+                  dedupe: 40,
+                },
+                {
+                  lender: 'olyv',
+                  total: 900,
+                  success: 780,
+                  dedupe: 30,
+                },
+              ].map((row, idx) => (
+                <tr
+                  key={idx}
+                  className="hover:bg-gray-50 transition-colors"
+                >
+                  <td className="px-6 py-4 whitespace-nowrap">{idx + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{row.lender}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{row.total.toLocaleString()}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-green-600 font-medium">
+                    {row.success.toLocaleString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-red-500 font-medium">
+                    {row.dedupe.toLocaleString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
         {/* Charts Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Chart 1: Loan Distribution Pie Chart */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5">
+          {/* Chart 1: User Distribution Pie Chart */}
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Loan Type Distribution</h2>
+            <h2 className="text-lg font-semibold text-gray-700 mb-4">User Distribution</h2>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -94,7 +211,6 @@ const LoanDashboard = () => {
                     label={({ name, percent }) =>
                       percent !== undefined ? `${name} ${(percent * 100).toFixed(0)}%` : `${name} 0%`
                     }
-
                   >
                     {loanDistributionData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -106,6 +222,30 @@ const LoanDashboard = () => {
               </ResponsiveContainer>
             </div>
           </div>
+
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+            <h2 className="text-lg font-semibold text-gray-700 mb-4">User Validation Summary</h2>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={[
+                    { name: 'Valid Users', count: analysisData.validUsers },
+                    { name: 'Invalid Users', count: analysisData.invalidUsers },
+                  ]}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis allowDecimals={false} />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="count" name="User Count" fill="#8884d8" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+
 
           {/* Chart 2: Repayment Status Area Chart */}
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
@@ -148,43 +288,55 @@ const LoanDashboard = () => {
           </div>
 
           {/* Chart 4: Customer Demographics Bar Chart */}
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Customer Age Distribution</h2>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={customerDemographics}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="age" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="count" name="Number of Customers" fill="#ffc658" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
 
-          {/* Chart 5: Portfolio Growth Line Chart */}
+
+          {/* Chart 5: Portfolio Growth Area Chart */}
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 lg:col-span-2">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Portfolio Growth (2023)</h2>
+            <h2 className="text-lg font-semibold text-gray-700 mb-4">Portfolio Growth (2025)</h2>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={portfolioGrowth}>
+                <AreaChart
+                  width={730}
+                  height={250}
+                  data={portfolioGrowth}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                  {/* Gradient Definitions */}
+                  <defs>
+                    <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="50%" stopColor="#00C49F" stopOpacity={0.8} />
+                      <stop offset="95%" stopColor="#00C49F" stopOpacity={0} />
+                    </linearGradient>
+                    <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                      <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Axes and Grid */}
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="quarter" />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Line
+
+                  {/* Chart Areas */}
+                  <Area
                     type="monotone"
                     dataKey="amount"
+                    stroke="#00C49F"
+                    fill="url(#colorUv)"
                     name="Portfolio Value ($)"
-                    stroke="#0088FE"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
                   />
-                </LineChart>
+                  <Area
+                    type="monotone"
+                    dataKey="uv"
+                    stroke="#8884d8"
+                    fill="url(#colorPv)"
+                    name="UV Metric"
+                  />
+                </AreaChart>
+
               </ResponsiveContainer>
             </div>
           </div>
